@@ -3,11 +3,13 @@ import Header from './components/Header.jsx'
 import MainScreen from './components/MainScreen.jsx'
 import VoteScreen from './components/VoteScreen.jsx'
 import NearbyStoreAlert from './components/NearbyStoreAlert.jsx'
+import ShareSheet from './components/ShareSheet.jsx'
 import { AuthContext } from './context/AuthContext.js'
 import { signInWithGoogle, signOut as authSignOut, onAuthStateChanged } from './services/auth.js'
 import { getWeekLabel } from './utils/weekHelpers.js'
 import { useBoycottData } from './hooks/useBoycottData.js'
 import { useNearbyStore } from './hooks/useNearbyStore.js'
+import { useShare } from './hooks/useShare.js'
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
@@ -35,6 +37,22 @@ export default function App() {
     startTracking,
     stopTracking,
   } = useNearbyStore()
+
+  const {
+    isOpen: shareOpen,
+    openSheet,
+    closeSheet,
+    selectedIds: shareSelectedIds,
+    toggleProduct: onToggleProduct,
+    note: shareNote,
+    setNote: onNoteChange,
+    copyStatus,
+    capabilities,
+    handleWhatsApp: onWhatsApp,
+    handleFacebook: onFacebook,
+    handleNativeShare: onNativeShare,
+    handleCopy: onCopy,
+  } = useShare(products)
 
   // Re-show alert when user re-enters a store after dismissing
   useEffect(() => {
@@ -92,9 +110,10 @@ export default function App() {
               locationError={locationError}
               onEnableTracking={startTracking}
               onStopTracking={stopTracking}
+              onOpenShare={openSheet}
             />
           ) : (
-            <VoteScreen />
+            <VoteScreen onOpenShare={openSheet} products={products} />
           )}
         </main>
 
@@ -105,6 +124,22 @@ export default function App() {
             onDismiss={() => setAlertDismissed(true)}
           />
         )}
+
+        <ShareSheet
+          isOpen={shareOpen}
+          onClose={closeSheet}
+          products={products}
+          selectedIds={shareSelectedIds}
+          onToggleProduct={onToggleProduct}
+          note={shareNote}
+          onNoteChange={onNoteChange}
+          copyStatus={copyStatus}
+          capabilities={capabilities}
+          onWhatsApp={onWhatsApp}
+          onFacebook={onFacebook}
+          onNativeShare={onNativeShare}
+          onCopy={onCopy}
+        />
       </div>
     </AuthContext.Provider>
   )

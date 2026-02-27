@@ -4,7 +4,7 @@ import AuthButton from './AuthButton.jsx'
 import { useAuth } from '../hooks/useAuth.js'
 import { useVoting } from '../hooks/useVoting.js'
 import { WEEK_VOTE_LIMIT } from '../utils/constants.js'
-import { CheckCircle2, AlertCircle, Search, Plus, Minus, X } from 'lucide-react'
+import { CheckCircle2, AlertCircle, Search, Plus, Minus, X, Share2 } from 'lucide-react'
 
 /**
  * Vote screen — authenticated users vote for next week's boycott list.
@@ -17,7 +17,7 @@ import { CheckCircle2, AlertCircle, Search, Plus, Minus, X } from 'lucide-react'
  *   • "Continue boycotting?" — unselected boycotted products, ~2 visible, scrollable
  *   • "Add to next week"     — ALL unselected active products, ~5 visible, scrollable + search
  */
-export default function VoteScreen() {
+export default function VoteScreen({ onOpenShare }) {
   const { user, signIn } = useAuth()
   const {
     boycottedProducts,
@@ -42,7 +42,7 @@ export default function VoteScreen() {
   }
 
   if (hasVoted) {
-    return <VoteConfirmation />
+    return <VoteConfirmation onOpenShare={onOpenShare} />
   }
 
   const handleSubmitClick = () => {
@@ -306,7 +306,7 @@ function SignInPrompt({ onSignIn }) {
   )
 }
 
-function VoteConfirmation() {
+function VoteConfirmation({ onOpenShare }) {
   return (
     <div className="flex flex-col items-center gap-6 py-16 text-center">
       <CheckCircle2 size={72} className="text-green-500" />
@@ -316,6 +316,18 @@ function VoteConfirmation() {
           Thank you. The top 5 voted products will become next week's boycott list on Monday.
         </p>
       </div>
+      {onOpenShare && (
+        <div className="mt-4">
+          <p className="text-sm text-gray-600 mb-3">Help us reach more people</p>
+          <button
+            onClick={onOpenShare}
+            className="flex items-center gap-2 min-h-[48px] px-6 py-3 rounded-2xl bg-red-600 text-white text-base font-semibold hover:bg-red-700 active:bg-red-800 transition-colors"
+          >
+            <Share2 size={20} aria-hidden="true" />
+            שתף את החרם שלי
+          </button>
+        </div>
+      )}
     </div>
   )
 }

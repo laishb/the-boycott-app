@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    font-size: 16px;
+    font-size: 20px;
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
   }
@@ -25,5 +25,14 @@
   p,
   li {
     @apply text-base leading-relaxed;
+  }
+
+  /* Add visible focus rings for accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible,
+  [role="checkbox"]:focus-visible {
+    outline: 3px solid #dc2626;
+    outline-offset: 2px;
   }
 }

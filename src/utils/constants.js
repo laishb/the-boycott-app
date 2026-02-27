@@ -19,6 +19,6 @@ export const PRODUCT_REASON_MIN = 10
 export const PRODUCT_REASON_MAX = 300
 
 // Social sharing
-export const APP_URL = import.meta.env.VITE_APP_URL ?? 'https://boycott.app'
 export const SHARE_NOTE_MAX = 140
 export const SHARE_HASHTAG = '#חרם_שבועי'
+export const DEFAULT_APP_URL = 'https://boycott.app'

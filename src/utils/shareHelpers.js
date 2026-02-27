@@ -1,4 +1,7 @@
-import { APP_URL, SHARE_HASHTAG } from './constants.js'
+import { DEFAULT_APP_URL, SHARE_HASHTAG } from './constants.js'
+
+// Get app URL from Vite env at runtime
+const APP_URL = import.meta.env.VITE_APP_URL || DEFAULT_APP_URL
 
 /**
  * Builds the Hebrew share text from a subset of products.

@@ -1,8 +1,6 @@
 import ProductCard from './ProductCard.jsx'
 import { useBoycottLikes } from '../hooks/useBoycottLikes.js'
 import { useAuth } from '../hooks/useAuth.js'
-import { useShare } from '../hooks/useShare.js'
-import ShareSheet from './ShareSheet.jsx'
 import { Ban, ChevronRight, AlertCircle, MapPin, Share2 } from 'lucide-react'
 
 /**
@@ -21,6 +19,7 @@ import { Ban, ChevronRight, AlertCircle, MapPin, Share2 } from 'lucide-react'
  *   locationError: string | null,
  *   onEnableTracking: () => void,
  *   onStopTracking: () => void,
+ *   onOpenShare: () => void,
  * }} props
  */
 export default function MainScreen({
@@ -34,24 +33,13 @@ export default function MainScreen({
   locationError,
   onEnableTracking,
   onStopTracking,
+  onOpenShare,
 }) {
   const { user } = useAuth()
   const { likedIds, likeCounts, handleLike } = useBoycottLikes(user, products)
-  const {
-    isOpen: shareOpen,
-    openSheet,
-    closeSheet,
-    selectedIds: shareSelectedIds,
-    toggleProduct: onToggleProduct,
-    note: shareNote,
-    setNote: onNoteChange,
-    copyStatus,
-    capabilities,
-    handleWhatsApp: onWhatsApp,
-    handleFacebook: onFacebook,
-    handleNativeShare: onNativeShare,
-    handleCopy: onCopy,
-  } = useShare(products)
+
+  // Calculate total votes for this week
+  const weeklyTotalVotes = products.reduce((sum, product) => sum + (product.currentWeekVotes || 0), 0)
 
   return (
     <section aria-labelledby="boycott-heading">
@@ -66,6 +54,12 @@ export default function MainScreen({
           {' '}button to mark it.
         </p>
       </div>
+
+      {weeklyTotalVotes > 0 && !isLoading && (
+        <p className="text-center text-sm text-red-600 font-semibold mb-4">
+          🔥 {weeklyTotalVotes.toLocaleString('he-IL')} אנשים הצביעו השבוע
+        </p>
+      )}
 
       {isLoading && <LoadingSkeleton />}
 
@@ -96,7 +90,7 @@ export default function MainScreen({
           {products.length > 0 && (
             <div className="mt-4 flex justify-center">
               <button
-                onClick={openSheet}
+                onClick={onOpenShare}
                 className="flex items-center gap-2 min-h-[48px] px-6 py-3 rounded-2xl border-2 border-red-200 text-red-600 bg-red-50 text-base font-semibold hover:border-red-400 hover:bg-red-100 active:bg-red-200 transition-colors"
               >
                 <Share2 size={20} aria-hidden="true" />
@@ -126,22 +120,6 @@ export default function MainScreen({
           </div>
         </>
       )}
-
-      <ShareSheet
-        isOpen={shareOpen}
-        onClose={closeSheet}
-        products={products}
-        selectedIds={shareSelectedIds}
-        onToggleProduct={onToggleProduct}
-        note={shareNote}
-        onNoteChange={onNoteChange}
-        copyStatus={copyStatus}
-        capabilities={capabilities}
-        onWhatsApp={onWhatsApp}
-        onFacebook={onFacebook}
-        onNativeShare={onNativeShare}
-        onCopy={onCopy}
-      />
     </section>
   )
 }
