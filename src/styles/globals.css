@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+    min-height: 100dvh;
+  }
+
+  /* Ensure all interactive elements meet 44px touch target minimum */
+  button,
+  [role="checkbox"],
+  [role="button"] {
+    min-height: 44px;
+  }
+
+  /* Improve readability on mobile */
+  p,
+  li {
+    @apply text-base leading-relaxed;
+  }
+}
